@@ -40,7 +40,7 @@ welcomemsg() { \
 	}
 
 selectdotfiles() { \
-	edition="$(dialog --title "Select LARBS version." --menu "Select which version of LARBS you wish to have as default:" 10 70 2 i3 "The classic version of LARBS using i3." dwm "The version of LARBS using suckless's dwm." custom "If you are supplying commandline options for LARBS." 3>&1 1>&2 2>&3 3>&1)" || error "User exited."
+	edition="$(dialog --title "Select LARBS version." --menu "Select which version of LARBS you wish to have as default:" 10 70 2 dwm "The version of LARBS using suckless's dwm." i3 "The classic version of LARBS using i3." custom "If you are supplying commandline options for LARBS." 3>&1 1>&2 2>&3 3>&1)" || error "User exited."
 	}
 
 getuserandpass() { \
@@ -231,6 +231,10 @@ sed -i "s/^$name:\(.*\):\/bin\/.*/$name:\1:\/bin\/zsh/" /etc/passwd
 
 # dbus UUID must be generated for Artix runit.
 dbus-uuidgen > /var/lib/dbus/machine-id
+
+# Block Brave autoupdates just in case. (I don't know if these even exist on Linux, but whatever.)
+grep -q "laptop-updates.brave.com" /etc/hosts || echo "0.0.0.0 laptop-updates.brave.com
+0.0.0.0 go-updater.brave.com" >> /etc/hosts
 
 # Let LARBS know the WM it's supposed to run.
 echo "$edition" > "/home/$name/.local/share/larbs/wm"; chown -R "$name":wheel "/home/$name/.local"
